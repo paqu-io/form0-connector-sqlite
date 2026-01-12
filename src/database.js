@@ -79,7 +79,10 @@ export class SQLiteDatabase {
     return await new Promise((resolve, reject) => {
       this.db.run(query, params, function runCallback(err) {
         if (err) {
-          reject(new Error(err.message));
+          const error = new Error(err.message);
+          error.code = err.code;
+          error.errno = err.errno;
+          reject(error);
           return;
         }
         resolve({ lastID: this.lastID, changes: this.changes });
@@ -98,7 +101,10 @@ export class SQLiteDatabase {
     return await new Promise((resolve, reject) => {
       this.db.get(query, params, (err, row) => {
         if (err) {
-          reject(new Error(err.message));
+          const error = new Error(err.message);
+          error.code = err.code;
+          error.errno = err.errno;
+          reject(error);
           return;
         }
         resolve(row);
@@ -117,7 +123,10 @@ export class SQLiteDatabase {
     return await new Promise((resolve, reject) => {
       this.db.all(query, params, (err, rows) => {
         if (err) {
-          reject(new Error(err.message));
+          const error = new Error(err.message);
+          error.code = err.code;
+          error.errno = err.errno;
+          reject(error);
           return;
         }
         resolve(rows);
@@ -136,7 +145,10 @@ export class SQLiteDatabase {
     return await new Promise((resolve, reject) => {
       this.db.exec(query, (err) => {
         if (err) {
-          reject(new Error(err.message));
+          const error = new Error(err.message);
+          error.code = err.code;
+          error.errno = err.errno;
+          reject(error);
           return;
         }
         resolve();
