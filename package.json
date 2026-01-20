@@ -1,7 +1,7 @@
 {
   "name": "form0-connector-sqlite",
   "version": "0.0.1-alpha.1",
-  "description": "SQLite connector for form0 - enables automatic form submission storage in SQLite databases",
+  "description": "SQLite connector for form0 ecosystem.",
   "type": "module",
   "main": "src/index.js",
   "engines": {
@@ -13,18 +13,30 @@
     "format:check": "prettier --check \"**/*.{js,jsx,json,md}\""
   },
   "keywords": [
-    "form0",
+    "form",
+    "form-builder",
+    "form-generator",
+    "form-engine",
+    "schema",
+    "json-schema",
+    "react",
+    "react-native",
+    "dynamic-forms",
     "sqlite",
     "connector",
-    "forms",
     "database"
   ],
-  "author": "Your Name",
+  "author": "paqu.io <hello@paqu.io> (https://paqu.io/)",
+  "contributors": [
+    {
+      "name": "aragornii"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "sqlite3": "^5.1.7",
     "dotenv": "^16.4.5",
-    "form0-core": "file:../form0-core"
+    "form0-core": "^0.1.0-0"
   },
   "devDependencies": {
     "prettier": "^3.5.3"
@@ -36,5 +48,5 @@
   "bugs": {
     "url": "https://github.com/yourusername/form0-connector-sqlite/issues"
   },
-  "homepage": "https://github.com/yourusername/form0-connector-sqlite#readme"
+  "homepage": "https://form0.dev"
 }
