@@ -43,10 +43,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yourusername/form0-connector-sqlite.git"
+    "url": "git+https://github.com/paqu-io/form0-connector-sqlite.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/form0-connector-sqlite/issues"
+    "url": "https://github.com/paqu-io/form0-connector-sqlite/issues"
   },
   "homepage": "https://form0.dev"
 }
