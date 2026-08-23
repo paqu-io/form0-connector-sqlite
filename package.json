@@ -1,7 +1,7 @@
 {
   "name": "form0-connector-sqlite",
   "version": "0.1.1",
-  "description": "SQLite connector for form0 ecosystem.",
+  "description": "SQLite connector for form0, the open-source schema-driven form ecosystem by paqu.io. Opt-in local persistence for form submissions.",
   "type": "module",
   "main": "src/index.js",
   "engines": {
@@ -13,18 +13,15 @@
     "format:check": "prettier --check \"**/*.{js,jsx,json,md}\""
   },
   "keywords": [
-    "form",
-    "form-builder",
-    "form-generator",
-    "form-engine",
-    "schema",
-    "json-schema",
-    "react",
-    "react-native",
-    "dynamic-forms",
+    "form0",
+    "paqu-io",
     "sqlite",
     "connector",
-    "database"
+    "form-submissions",
+    "schema-driven-forms",
+    "json-schema",
+    "database",
+    "offline-first"
   ],
   "author": "paqu.io <hello@paqu.io> (https://paqu.io/)",
   "contributors": [
@@ -34,9 +31,9 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "sqlite3": "^5.1.7",
     "dotenv": "^16.4.5",
-    "form0-core": "^0.1.0-0"
+    "form0-core": "^0.1.26",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "prettier": "^3.5.3"
