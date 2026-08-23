@@ -1,6 +1,6 @@
 {
   "name": "form0-connector-sqlite",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "SQLite connector for form0, the open-source schema-driven form ecosystem by paqu.io. Opt-in local persistence for form submissions.",
   "type": "module",
   "main": "src/index.js",
