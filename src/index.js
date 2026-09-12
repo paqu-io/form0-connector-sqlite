@@ -6,10 +6,14 @@
 
 import path from 'path';
 import fs from 'fs/promises';
+import { createRequire } from 'node:module';
 import dotenv from 'dotenv';
 import { recordVersion } from 'form0-core';
 import { SQLiteDatabase } from './database.js';
 import { createSchema } from './schema.js';
+
+const require = createRequire(import.meta.url);
+const { version: PACKAGE_VERSION } = require('../package.json');
 
 // Load environment variables
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
@@ -96,9 +100,7 @@ export class Form0SQLiteConnector {
 
       this.config = {
         ...mergedConfig,
-        databasePath: path.isAbsolute(dbPath)
-          ? dbPath
-          : path.resolve(process.cwd(), dbPath),
+        databasePath: path.isAbsolute(dbPath) ? dbPath : path.resolve(process.cwd(), dbPath),
         tableName: sanitizeIdentifier(
           mergedConfig.tableName || env.FORM0_CONNECTOR_SQLITE_TABLE_NAME,
           DEFAULT_MAIN_TABLE
@@ -143,7 +145,9 @@ export class Form0SQLiteConnector {
 
     try {
       if (structuredRecord.version && !recordVersion.isValid(structuredRecord.version)) {
-        console.warn(`[form0-connector-sqlite] Invalid record version: ${structuredRecord.version}`);
+        console.warn(
+          `[form0-connector-sqlite] Invalid record version: ${structuredRecord.version}`
+        );
       }
 
       const serverTimestamp = new Date().toISOString();
@@ -255,7 +259,9 @@ export class Form0SQLiteConnector {
           return await this.onFormSubmit(structuredRecord, { retry: true });
         } catch (retryError) {
           const retryHint = getLockHint(retryError);
-          const retryMessage = retryHint ? `${retryError.message} ${retryHint}` : retryError.message;
+          const retryMessage = retryHint
+            ? `${retryError.message} ${retryHint}`
+            : retryError.message;
           console.error('[form0-connector-sqlite] Retry failed:', retryMessage);
           return {
             success: false,
@@ -306,6 +312,8 @@ export class Form0SQLiteConnector {
    */
   getMetadata() {
     return {
+      name: 'form0-connector-sqlite',
+      version: PACKAGE_VERSION,
       type: 'sqlite',
       database: this.config.databasePath,
       databasePath: this.config.databasePath,

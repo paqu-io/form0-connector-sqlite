@@ -3,7 +3,17 @@
  * Supports both main records and child records with proper relationships
  */
 
-import sqlite3 from 'sqlite3';
+import Database from 'better-sqlite3';
+
+const normalizeParams = (params) =>
+  Array.isArray(params) ? params.map((value) => (value === undefined ? null : value)) : params;
+
+const toConnectorError = (source) => {
+  const error = new Error(source.message);
+  error.code = source.code;
+  error.errno = source.errno;
+  return error;
+};
 
 export class SQLiteDatabase {
   constructor(config) {
@@ -21,22 +31,13 @@ export class SQLiteDatabase {
 
     const filename = this.config.databasePath;
 
-    await new Promise((resolve, reject) => {
-      this.db = new sqlite3.Database(filename, (err) => {
-        if (err) {
-          reject(new Error(`Failed to open SQLite database: ${err.message}`));
-          return;
-        }
-
-        this.db.run('PRAGMA foreign_keys = ON', (pragmaErr) => {
-          if (pragmaErr) {
-            reject(new Error(`Failed to enable foreign keys: ${pragmaErr.message}`));
-            return;
-          }
-          resolve();
-        });
-      });
-    });
+    try {
+      this.db = new Database(filename);
+      this.db.pragma('foreign_keys = ON');
+    } catch (error) {
+      this.db = null;
+      throw new Error(`Failed to open SQLite database: ${error.message}`);
+    }
 
     if (this.config.debug) {
       console.log('[form0-connector-sqlite] Database connected successfully');
@@ -51,17 +52,12 @@ export class SQLiteDatabase {
       return;
     }
 
-    await new Promise((resolve, reject) => {
-      this.db.close((err) => {
-        if (err) {
-          reject(new Error(`Failed to close SQLite database: ${err.message}`));
-          return;
-        }
-        resolve();
-      });
-    });
-
-    this.db = null;
+    try {
+      this.db.close();
+      this.db = null;
+    } catch (error) {
+      throw new Error(`Failed to close SQLite database: ${error.message}`);
+    }
 
     if (this.config.debug) {
       console.log('[form0-connector-sqlite] Database disconnected');
@@ -76,18 +72,12 @@ export class SQLiteDatabase {
       throw new Error('Database not connected');
     }
 
-    return await new Promise((resolve, reject) => {
-      this.db.run(query, params, function runCallback(err) {
-        if (err) {
-          const error = new Error(err.message);
-          error.code = err.code;
-          error.errno = err.errno;
-          reject(error);
-          return;
-        }
-        resolve({ lastID: this.lastID, changes: this.changes });
-      });
-    });
+    try {
+      const result = this.db.prepare(query).run(normalizeParams(params));
+      return { lastID: result.lastInsertRowid, changes: result.changes };
+    } catch (error) {
+      throw toConnectorError(error);
+    }
   }
 
   /**
@@ -98,18 +88,11 @@ export class SQLiteDatabase {
       throw new Error('Database not connected');
     }
 
-    return await new Promise((resolve, reject) => {
-      this.db.get(query, params, (err, row) => {
-        if (err) {
-          const error = new Error(err.message);
-          error.code = err.code;
-          error.errno = err.errno;
-          reject(error);
-          return;
-        }
-        resolve(row);
-      });
-    });
+    try {
+      return this.db.prepare(query).get(normalizeParams(params));
+    } catch (error) {
+      throw toConnectorError(error);
+    }
   }
 
   /**
@@ -120,18 +103,11 @@ export class SQLiteDatabase {
       throw new Error('Database not connected');
     }
 
-    return await new Promise((resolve, reject) => {
-      this.db.all(query, params, (err, rows) => {
-        if (err) {
-          const error = new Error(err.message);
-          error.code = err.code;
-          error.errno = err.errno;
-          reject(error);
-          return;
-        }
-        resolve(rows);
-      });
-    });
+    try {
+      return this.db.prepare(query).all(normalizeParams(params));
+    } catch (error) {
+      throw toConnectorError(error);
+    }
   }
 
   /**
@@ -142,18 +118,11 @@ export class SQLiteDatabase {
       throw new Error('Database not connected');
     }
 
-    return await new Promise((resolve, reject) => {
-      this.db.exec(query, (err) => {
-        if (err) {
-          const error = new Error(err.message);
-          error.code = err.code;
-          error.errno = err.errno;
-          reject(error);
-          return;
-        }
-        resolve();
-      });
-    });
+    try {
+      this.db.exec(query);
+    } catch (error) {
+      throw toConnectorError(error);
+    }
   }
 
   /**
