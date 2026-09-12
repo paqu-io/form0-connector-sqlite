@@ -70,6 +70,10 @@ await connector.destroy();
 `initialize(config, envVars)` accepts explicit configuration overrides when environment variables
 are not appropriate for the host application.
 
+Set `FORM0_CONNECTOR_SQLITE_DEBUG=true` to enable lifecycle diagnostics, including the resolved
+database filesystem path. Debug output may reveal local directory information, so do not enable it
+where logs are publicly accessible or shared with untrusted parties.
+
 ## Storage behavior
 
 - The database file and configured tables are created when the connector initializes.

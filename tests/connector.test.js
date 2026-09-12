@@ -19,6 +19,64 @@ test('metadata reports the installed package version', () => {
   assert.equal(metadata.type, 'sqlite');
 });
 
+test('debug logging includes the configured database path', async (t) => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'form0-sqlite-debug-test-'));
+  const databasePath = path.join(directory, 'private-records.db');
+  const connector = new Form0SQLiteConnector();
+  const messages = [];
+  const originalConsoleLog = console.log;
+
+  console.log = (...args) => messages.push(args.join(' '));
+
+  t.after(async () => {
+    try {
+      await connector.destroy();
+    } finally {
+      console.log = originalConsoleLog;
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  await connector.initialize({ databasePath, debug: true });
+
+  assert.ok(
+    messages.some((message) =>
+      message.includes('[form0-connector-sqlite] Initialized successfully')
+    )
+  );
+  assert.equal(
+    messages.some((message) => message.includes(databasePath)),
+    true
+  );
+  assert.equal((await connector.healthCheck()).database, databasePath);
+});
+
+test('default logging does not expose the configured database path', async (t) => {
+  const directory = await mkdtemp(path.join(tmpdir(), 'form0-sqlite-default-log-test-'));
+  const databasePath = path.join(directory, 'private-records.db');
+  const connector = new Form0SQLiteConnector();
+  const messages = [];
+  const originalConsoleLog = console.log;
+
+  console.log = (...args) => messages.push(args.join(' '));
+
+  t.after(async () => {
+    try {
+      await connector.destroy();
+    } finally {
+      console.log = originalConsoleLog;
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  await connector.initialize({ databasePath });
+
+  assert.equal(
+    messages.some((message) => message.includes(databasePath)),
+    false
+  );
+});
+
 test('initializes custom tables and stores main and nested records', async (t) => {
   const directory = await mkdtemp(path.join(tmpdir(), 'form0-sqlite-test-'));
   const databasePath = path.join(directory, 'records.db');
