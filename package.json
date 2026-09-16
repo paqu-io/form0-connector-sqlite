@@ -35,7 +35,7 @@
     "database",
     "offline-first"
   ],
-  "author": "paqu.io <hello@paqu.io> (https://paqu.io/)",
+  "author": "paqu technologies <hello@paqu.io> (https://paqu.io/)",
   "contributors": [
     {
       "name": "aragornii"
@@ -43,9 +43,9 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "better-sqlite3": "^13.0.3",
     "dotenv": "^16.4.5",
-    "form0-core": "^0.2.1",
-    "better-sqlite3": "^13.0.3"
+    "form0-core": "^0.3.0"
   },
   "devDependencies": {
     "prettier": "^3.5.3"
