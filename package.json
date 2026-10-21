@@ -45,7 +45,7 @@
   "dependencies": {
     "better-sqlite3": "^13.0.3",
     "dotenv": "^16.4.5",
-    "form0-core": "^0.3.0"
+    "form0-core": "^0.5.1"
   },
   "devDependencies": {
     "prettier": "^3.5.3"
