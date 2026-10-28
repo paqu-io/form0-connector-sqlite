@@ -42,10 +42,11 @@
     }
   ],
   "license": "MIT",
+  "funding": "https://opencollective.com/form0",
   "dependencies": {
     "better-sqlite3": "^13.0.3",
     "dotenv": "^16.4.5",
-    "form0-core": "^0.5.1"
+    "form0-core": "^0.8.1"
   },
   "devDependencies": {
     "prettier": "^3.5.3"
